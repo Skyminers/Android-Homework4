@@ -22,6 +22,7 @@ public class ClockView extends View {
 
     private static final int FULL_CIRCLE_DEGREE = 360;
     private static final int UNIT_DEGREE = 6;
+    private static final int UNIT_NUMBER_DEGREE = 30;
 
     private static final float UNIT_LINE_WIDTH = 8; // 刻度线的宽度
     private static final int HIGHLIGHT_UNIT_ALPHA = 0xFF;
@@ -30,9 +31,12 @@ public class ClockView extends View {
     private static final float HOUR_NEEDLE_LENGTH_RATIO = 0.4f; // 时针长度相对表盘半径的比例
     private static final float MINUTE_NEEDLE_LENGTH_RATIO = 0.6f; // 分针长度相对表盘半径的比例
     private static final float SECOND_NEEDLE_LENGTH_RATIO = 0.8f; // 秒针长度相对表盘半径的比例
+    private static final float NUMBER_DISTANCE_LENGTH_RATIO = 0.8f; // 数字与圆心距离相对表盘半径的比例
     private static final float HOUR_NEEDLE_WIDTH = 12; // 时针的宽度
     private static final float MINUTE_NEEDLE_WIDTH = 8; // 分针的宽度
     private static final float SECOND_NEEDLE_WIDTH = 4; // 秒针的宽度
+
+    private static final float NUMBER_TEXT_SIZE = 80;
 
     private Calendar calendar = Calendar.getInstance();
 
@@ -77,6 +81,11 @@ public class ClockView extends View {
         needlePaint.setStyle(Paint.Style.STROKE);
 
         // TODO 设置绘制时间数字的画笔: numberPaint
+        numberPaint.setAntiAlias(true);
+        numberPaint.setColor(Color.WHITE);
+        numberPaint.setTextSize(NUMBER_TEXT_SIZE);
+        numberPaint.setStyle(Paint.Style.FILL);
+        numberPaint.setTextAlign(Paint.Align.CENTER);
 
     }
 
@@ -176,8 +185,26 @@ public class ClockView extends View {
         canvas.drawLine(centerX,centerY,(float)endX,(float)endY,needlePaint);
     }
 
+    private void drawTextCenter(Canvas canvas, float centerX, float centerY, String text){
+
+        Paint.FontMetrics fontMetrics = numberPaint.getFontMetrics();
+        float top = fontMetrics.top;
+        float bottom = fontMetrics.bottom;
+        int baseLineY = (int)(centerY + ((bottom - top)/2 - bottom));
+        canvas.drawText(text,centerX,baseLineY,numberPaint);
+    }
+
     private void drawTimeNumbers(Canvas canvas) {
         // TODO 绘制表盘时间数字（可选）
+        Log.d(TAG,"Begin to draw numbers");
+        for (int degree = 0,i = 0; degree < FULL_CIRCLE_DEGREE; degree += UNIT_NUMBER_DEGREE, ++ i) {
+            double posX = centerX + Math.cos(Math.toRadians(90 - degree))*NUMBER_DISTANCE_LENGTH_RATIO*radius;
+            double posY = centerY - Math.sin(Math.toRadians(90 - degree))*NUMBER_DISTANCE_LENGTH_RATIO*radius;
+            String text;
+            if(i == 0) text = "12";
+            else text = Integer.toString(i);
+            drawTextCenter(canvas,(float) posX,(float) posY, text);
+        }
     }
 
     // 获取当前的时间：时、分、秒

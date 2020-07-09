@@ -176,9 +176,9 @@ public class ClockView extends View {
         endY = centerY - Math.sin(minuteRad)*MINUTE_NEEDLE_LENGTH_RATIO*radius;
         canvas.drawLine(centerX,centerY,(float)endX,(float)endY,needlePaint);
 
-        double hourRad = Math.toRadians(90 - (float)hour/24*360
-                                           - (float)minute/60*360
-                                           - (float)second/60*360/60);
+        double hourRad = Math.toRadians(90 - (float)(hour%12)/12*360
+                                           - (float)minute/60/60*360
+                                           - (float)second/60*360/60/60);
         needlePaint.setStrokeWidth(HOUR_NEEDLE_WIDTH);
         endX = centerX + Math.cos(hourRad)*HOUR_NEEDLE_LENGTH_RATIO*radius;
         endY = centerY - Math.sin(hourRad)*HOUR_NEEDLE_LENGTH_RATIO*radius;

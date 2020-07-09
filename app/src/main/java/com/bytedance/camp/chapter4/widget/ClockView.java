@@ -36,7 +36,8 @@ public class ClockView extends View {
     private static final float MINUTE_NEEDLE_WIDTH = 8; // 分针的宽度
     private static final float SECOND_NEEDLE_WIDTH = 4; // 秒针的宽度
 
-    private static final float NUMBER_TEXT_SIZE = 80;
+    private static final float NUMBER_TEXT_SIZE = 80; // 数字大小
+    private static final float CENTER_CIRCLE_RADIUS = 10; // 圆心处圆点的半径
 
     private Calendar calendar = Calendar.getInstance();
 
@@ -183,6 +184,9 @@ public class ClockView extends View {
         endX = centerX + Math.cos(hourRad)*HOUR_NEEDLE_LENGTH_RATIO*radius;
         endY = centerY - Math.sin(hourRad)*HOUR_NEEDLE_LENGTH_RATIO*radius;
         canvas.drawLine(centerX,centerY,(float)endX,(float)endY,needlePaint);
+
+        needlePaint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(centerX,centerY,CENTER_CIRCLE_RADIUS,needlePaint);
     }
 
     private void drawTextCenter(Canvas canvas, float centerX, float centerY, String text){
